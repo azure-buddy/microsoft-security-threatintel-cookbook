@@ -43,15 +43,18 @@ Microsoft Sentinel provides multiple ways to work with the STIX/TAXII Standard.
   - Supports multiple collections from multiple servers
   - Polls for new indicators based on your configured frequency
   - Stores indicators in ThreatIntelIndicators table
+    
 **Threat Intelligence Upload API**
   - REST API for programmatic STIX object upload
   - Supports all STIX 2.1 objects (indicators, threat actors, relationships, etc.)
   - Workspace-scoped endpoint with granular permissions
   - Does not require a data connector
+
 **Threat Intelligence - TAXII Export Connector**
   - Exports threat intelligence from Sentinel to external TAXII 2.1 servers
   - Enables bi-directional intelligence sharing
   - Supports scheduled or on-demand exports
+
 **Microsoft Defender Threat Intelligence (MDTI)**
   - Built-in feed from Microsoft's threat intelligence platform
   - No configuration required beyond enabling the connector
