@@ -70,17 +70,87 @@ Microsoft's unified security operations platform (accessible via the Microsoft D
 
 ## Key Concepts and Terminology
 
-Term	Definition
-IOC	Indicator of Compromise - observable artifacts that suggest malicious activity
-TIP	Threat Intelligence Platform - aggregates and curates threat intelligence from multiple sources
-TLP	Traffic Light Protocol - classification scheme for sharing sensitivity (Clear, Green, Amber, Red)
-API Root	Base URL in TAXII that hosts collections of threat intelligence
-Collection ID	Unique identifier for a group of threat intelligence objects within an API root
-
 | **Term**          | **Definition**                                                                                    |
 | ----------------- | ------------------------------------------------------------------------------------------------- |
 | **IOC**           | Indicator of Compromise - observable artifacts that suggest malicious activity                    |
 | **TIP**           | Threat Intelligence Platform - aggregates and curates threat intelligence from multiple sources   |
-| **TLP**           | Traffic Light Protocol - classification scheme for sharing sensitivity (Clear, Green, Amber, Red) |
+| **TLP**           | Traffic Light Protocol - classification scheme for sharing sensitivity (CLEAR, GREEN, AMBER, AMBER+STRICT, RED) |
 | **API Root**      | Base URL in TAXII that hosts collections of threat intelligence                                   |
-| **Collection ID** | Unique identifier for a group of threat intelligence objects within an API root                   |
+| **Collection ID** | Unique identifier (UUIDv4) for a group of threat intelligence objects within an API root          |
+
+## Understanding how threat intelligence flows through Microsoft Sentinel
+
+```mermaid
+graph LR
+    subgraph Ingestion Sources
+        direction TB
+        Ingestion[Threat Intelligence]
+    end
+
+    subgraph Storage Tables
+        direction LR
+        ThreatIntelIndicators[ThreatIntelIndicators]
+        ThreatIntelObjects[ThreatIntelObjects]
+    end
+
+    subgraph Event Enrichment
+        direction LR
+        Analyticsrules[Analytics rules]
+    end
+
+    subgraph Alert Detection
+        direction LR
+        IncidentQueue[Incident Queue]
+    end
+
+    subgraph Automated Response
+        direction LR
+        AutoPlaybook[Automation Playbook]
+    end
+
+    subgraph TAXII Export
+        direction LR
+        TISharing[Intelligence Sharing]
+    end
+
+    Ingestion --> ThreatIntelIndicators
+    Ingestion --> ThreatIntelObjects
+    ThreatIntelIndicators --> Analyticsrules
+    ThreatIntelObjects --> Analyticsrules
+    Analyticsrules --> IncidentQueue
+    IncidentQueue  -->  AutoPlaybook
+    AutoPlaybook --> TISharing
+```
+
+Below the event flow of threat intelligence.
+
+1. Ingestion: Threat intelligence enters via TAXII connectors, Upload API, or MDTI.
+2. Storage: Data is stored in ThreatIntelIndicators and ThreatIntelObjects tables.
+3. Enrichment: Analytics rules correlate TI with other data sources (logs, alerts).
+4. Detection: Matches generate alerts and incidents in the unified incident queue.
+5. Response: Automated playbooks can act on TI-enriched incidents.
+6. Export: Intelligence can be shared externally via TAXII export.
+
+## Quick Reference: Portal Locations
+
+| **Feature**         | **Azure Portal**                        | **Defender Portal**                                       |
+| ------------------- | --------------------------------------- | --------------------------------------------------------- |
+| Data Connectors     | Configuration > Data connectors         | Microsoft Sentinel > Content management > Data connectors |
+| Threat Intelligence | Threat management > Threat intelligence | Threat intelligence > Intel management                    |
+| Advanced Hunting    | Hunting > Advanced hunting              | Investigation & response > Hunting > Advanced hunting     |
+
+## References
+| **Resource**                                  | **Link**                                                                                                                                                                 |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Threat Intelligence in Microsoft Sentinel** | [https://learn.microsoft.com/en-us/azure/sentinel/understand-threat-intelligence](https://learn.microsoft.com/en-us/azure/sentinel/understand-threat-intelligence)       |
+| **STIX/TAXII Feeds Integration**              | [https://learn.microsoft.com/en-us/azure/sentinel/connect-threat-intelligence-taxii](https://learn.microsoft.com/en-us/azure/sentinel/connect-threat-intelligence-taxii) |
+| **Unified Security Operations Overview**      | [https://learn.microsoft.com/en-us/unified-secops/overview-unified-security](https://learn.microsoft.com/en-us/unified-secops/overview-unified-security)                 |
+| **OASIS STIX 2.1 Specification**              | [https://docs.oasis-open.org/cti/stix/v2.1/stix-v2.1.html](https://docs.oasis-open.org/cti/stix/v2.1/stix-v2.1.html)                                                     |
+
+## Key Takeaways
+
+- STIX provides a standard vocabulary for threat intelligence; TAXII provides the transport
+- Microsoft Sentinel supports STIX 2.1 with five main object types plus relationships
+- New tables (ThreatIntelIndicators, ThreatIntelObjects) replace the legacy table by July 2025
+- The unified Defender portal combines TI management with XDR and SIEM capabilities
+- Multiple integration methods exist: TAXII connector, Upload API, MDTI, and TIP connector
