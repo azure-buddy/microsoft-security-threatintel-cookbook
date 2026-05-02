@@ -60,3 +60,27 @@ Microsoft Sentinel provides multiple ways to work with the STIX/TAXII Standard.
   - No configuration required beyond enabling the connector
   - Provides indicators at no additional cost
 
+## The Unified Security Operations Portal
+
+Microsoft's unified security operations platform (accessible via the Microsoft Defender portal at https://security.microsoft.com) brings together threat intelligence management with other security capabilities:
+  - Unified Incidents: Correlates TI with XDR and SIEM alerts
+  - Advanced Hunting: Query threat intelligence alongside device, identity, and email data
+  - Threat Intelligence Management: Create, curate, and establish relationships between objects
+  - Attack Disruption: Automatically responds to detected threats using TI context
+
+## Key Concepts and Terminology
+
+Term	Definition
+IOC	Indicator of Compromise - observable artifacts that suggest malicious activity
+TIP	Threat Intelligence Platform - aggregates and curates threat intelligence from multiple sources
+TLP	Traffic Light Protocol - classification scheme for sharing sensitivity (Clear, Green, Amber, Red)
+API Root	Base URL in TAXII that hosts collections of threat intelligence
+Collection ID	Unique identifier for a group of threat intelligence objects within an API root
+
+| **Term**          | **Definition**                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| **IOC**           | Indicator of Compromise - observable artifacts that suggest malicious activity                    |
+| **TIP**           | Threat Intelligence Platform - aggregates and curates threat intelligence from multiple sources   |
+| **TLP**           | Traffic Light Protocol - classification scheme for sharing sensitivity (Clear, Green, Amber, Red) |
+| **API Root**      | Base URL in TAXII that hosts collections of threat intelligence                                   |
+| **Collection ID** | Unique identifier for a group of threat intelligence objects within an API root                   |
