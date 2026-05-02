@@ -77,5 +77,6 @@ curl -X GET https://taxii.provider.com/taxii2/ \   -H "Accept: application/taxii
 | **Import Indicators** | Select indicator types to import (All, IP, URL, Domain, Hash, Email)             |
 | **Polling Frequency** | How often to poll for new indicators (Once an hour, Once a day, Once per minute) |
 
+
 > [!Important]
 > Choose polling frequency carefully. More frequent polling increases costs and may hit provider rate limits. For most feeds, 'Once an hour' is sufficient.
