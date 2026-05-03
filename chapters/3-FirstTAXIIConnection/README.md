@@ -94,3 +94,82 @@ curl -X GET https://taxii.provider.com/taxii2/ \   -H "Accept: application/taxii
 
 > [!Important]
 > Choose polling frequency carefully. More frequent polling increases costs and may hit provider rate limits. For most feeds, 'Once an hour' is sufficient.
+
+## Step 4: Verify Connection
+
+After clicking 'Add', you should see a confirmation message: 'Connection to TAXII server established successfully.' Within a few minutes, indicators should begin appearing in your workspace.
+
+### Check Indicator Import Status
+
+Run this KQL query in Log Analytics or Advanced Hunting:
+
+```
+ThreatIntelligenceIndicator | where SourceSystem contains "Pulsedive"  // Replace with your source name | summarize Count=count() by bin(TimeGenerated, 1h) | order by TimeGenerated desc | take 24
+```
+
+This shows the number of indicators imported per hour over the last 24 hours.
+
+### View Imported Indicators
+
+To see the actual indicators:
+
+```
+ThreatIntelligenceIndicator | where SourceSystem contains "Pulsedive" | extend IndicatorValue = coalesce(     NetworkIP,     DomainName,     Url,     FileHashValue ) | project      TimeGenerated,     IndicatorValue,     ThreatType,     Confidence,     Description | take 100
+```
+
+## Step 5: Connect Additional Feeds
+
+You can connect multiple TAXII feeds to the same workspace. Simply repeat Step 3 for each feed, using a unique friendly name for each connection.
+
+### Recommended Free Feeds for Testing
+
+- Pulsedive: Community-driven threat intelligence
+- Microsoft Defender Threat Intelligence: Free Microsoft TI feed
+- AlienVault OTX: Open Threat Exchange community feed
+
+## Troubleshooting Common Issues
+
+### Issue: Connection Fails with '401 Unauthorized'
+
+Solution: Verify your username/password or API key. Some providers require the API key in the username field with a blank password.
+
+### Issue: Connection Succeeds but No Indicators Appear
+
+Potential causes:
+- Collection is empty or doesn't contain compatible indicators
+- Polling hasn't occurred yet (wait for the next scheduled poll)
+- Indicator group filter excludes all indicators
+- Verify with: `ThreatIntelligenceIndicator | where SourceSystem contains "[YourSourceName]" | take 1`
+
+### Issue: 'Invalid API Root' Error
+
+Solution: Ensure the API root URL:
+- Includes the protocol (https://)
+- Does NOT include the collection ID (that goes in a separate field)
+- Ends with a trailing slash if required by the provider
+
+### Issue: Need to Allowlist Microsoft Sentinel IP
+
+Some TAXII servers (like FS-ISAC) require allowlisting the Microsoft Sentinel TAXII client IP addresses. Contact your TAXII provider for their allowlisting process. Microsoft's documentation doesn't publish these IPs publicly, so you'll need to work with Microsoft Support if required.
+
+## Advanced: Configuring Ingestion Rules
+
+Ingestion rules help reduce noise by filtering indicators before they're stored in your workspace. This is covered in detail in Chapter 5.
+
+## References
+
+| **Resource**                      | **Link**                                                                                                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Connect to STIX/TAXII Feeds**   | [https://learn.microsoft.com/en-us/azure/sentinel/connect-threat-intelligence-taxii](https://learn.microsoft.com/en-us/azure/sentinel/connect-threat-intelligence-taxii) |
+| **Threat Intelligence Solution**  | [https://learn.microsoft.com/en-us/azure/sentinel/understand-threat-intelligence](https://learn.microsoft.com/en-us/azure/sentinel/understand-threat-intelligence)       |
+| **Pulsedive TAXII Documentation** | [https://pulsedive.com/api/](https://pulsedive.com/api/)                                                                                                                 |
+
+## Challenge
+
+Advanced topic: Set up multiple TAXII connections to compare different threat feeds. Create a KQL query that shows which feed provides the most unique indicators versus overlapping indicators across feeds.
+
+```
+// Hint: Use summarize with dcount() and make_set() to identify unique vs. shared indicators
+
+
+```
