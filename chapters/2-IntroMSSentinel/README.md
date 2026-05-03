@@ -28,11 +28,15 @@ TAXII (Trusted Automated eXchange of Intelligence Information) is a protocol for
 
 TAXII 2.x uses a client-server model with these key components:
 
-- API Root: The base URL that hosts threat intelligence collections
-- Collections: Groups of threat intelligence objects (like folders)
+- API Root: The base URL that hosts threat intelligence collections:
+  - Common default is `taxii2/root`, but can also other like `taxii1/api`.
+- Collections: Groups of threat intelligence objects (like folders):
+  - Collections are referenced by `ID` which is UUIDv4 formatted, such as `a08566d0-8ae0-4004-8dfb-655e891ca876`.
 - Discovery Endpoint: URL that advertises available API Endpoints:
-  - API Root: https://taxii.example.com/taxi2/root
-  - Collection: https://taxii.example.com/taxii2/root/collections/a08566d0-8ae0-4004-8dfb-655e891ca876
+  - Default is `taxii2`. Use `GET` to display the available API Root endpoints.
+  - With the API Root you can display the available collections using `GET` `taxii2/root/collections`.
+- Collection Objects: URL that provides access to the specific collection objects:
+  - Combining all examples the collection endpoint is `taxii2/root/collections/a08566d0-8ae0-4004-8dfb-655e891ca876`.
  
 ## Microsoft Sentinel's STIX/TAXII Integration
 

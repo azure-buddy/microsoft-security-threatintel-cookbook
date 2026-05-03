@@ -162,7 +162,7 @@ Ingestion rules help reduce noise by filtering indicators before they're stored 
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Connect to STIX/TAXII Feeds**   | [https://learn.microsoft.com/en-us/azure/sentinel/connect-threat-intelligence-taxii](https://learn.microsoft.com/en-us/azure/sentinel/connect-threat-intelligence-taxii) |
 | **Threat Intelligence Solution**  | [https://learn.microsoft.com/en-us/azure/sentinel/understand-threat-intelligence](https://learn.microsoft.com/en-us/azure/sentinel/understand-threat-intelligence)       |
-| **Pulsedive TAXII Documentation** | [https://pulsedive.com/api/](https://pulsedive.com/api/)                                                                                                                 |
+| **Pulsedive TAXII Documentation** | [https://docs.pulsedive.com/taxii](https://pulsedive.com/api/)                                                                                                                 |
 
 ## Challenge
 
