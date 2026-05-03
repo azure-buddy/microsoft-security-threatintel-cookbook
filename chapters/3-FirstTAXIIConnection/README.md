@@ -73,7 +73,7 @@ curl -X GET https://taxii.provider.com/taxii2/ \   -H "Accept: application/taxii
 | **API Root URL**      | Full TAXII API root endpoint (must include protocol: https://)                   |
 | **Collection ID**     | UUID or string identifying the threat intelligence collection                    |
 | **Username**          | Authentication username (leave blank if not required)                            |
-| **Password**          | Authentication password or API key                                               |
+| **Password**          | Authentication password or in case of Pulsedrive you may provide the API key     |
 | **Import Indicators** | Select indicator types to import (All, IP, URL, Domain, Hash, Email)             |
 | **Polling Frequency** | How often to poll for new indicators (Once an hour, Once a day, Once per minute) |
 
