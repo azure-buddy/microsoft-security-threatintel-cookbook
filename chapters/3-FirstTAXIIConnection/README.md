@@ -11,7 +11,7 @@ This chapter walks you through connecting Microsoft Sentinel to a TAXII 2.x serv
 
 > [!NOTE]  
 > If you don't have TAXII credentials yet, you can use free feeds from Pulsedive (https://pulsedive.com) or other
-> OSINT providers. Register for a free account to get API credentials.
+> OSINT providers. Learn more about the free [Pulsedrive Feeds here.](https://pulsedive.com/about/feed) and don't forget to register for a free account to get API > credentials.
 
 ## Step 1: Install the Threat Intelligence Solution
 
