@@ -40,7 +40,20 @@ Before configuring the connector, gather the following information from your thr
 -  Username: Authentication credential (if required)
 -  Password: Authentication credential (if required)
 
-### Example: Pulsedive TAXII Server
+### Example looking up available API-root and Collections using Browser
+This example below shows how to lookup the available API Roots. Just copy/paste this into your favorite browser and don't forget to include your key.
+
+```
+https://pulsedive.com/taxii2/?accept=application%2Ftaxii%2Bjson%3Bversion%3D2.1&pretty=1&key=xxxyyyzzz
+```
+
+Now that you known the API Root you can lookup the test collection.
+
+```
+https://pulsedive.com/taxii2/api/collections/?accept=application%2Ftaxii%2Bjson%3Bversion%3D2.1&pretty=1&key=xxxyyyzzz
+```
+
+
 API Root: https://pulsedive.com/api/explore/threat/taxii/ Collection ID: indicators Username: [Your Pulsedive API Key] Password: [Leave blank or use API key]
 
 ### Using cURL to Discover API Roots
