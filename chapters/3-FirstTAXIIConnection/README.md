@@ -22,13 +22,14 @@ The Threat Intelligence solution contains all necessary connectors and analytics
 1. Navigate to your Microsoft Sentinel workspace.
 2. Select Content management > Content hub.
 3. Search for 'Threat Intelligence'.
-4. Select the Threat Intelligence solution.
+4. Select the Threat Intelligence (NEW) solution.
 5. Click Install/Update.
 
 ### In Defender Portal:
 1. Navigate to Microsoft Sentinel > Content management > Content hub.
 2. Search for 'Threat Intelligence'.
-3. Select the solution and click Install/Update.
+3. Select the Threat Intelligence (NEW) solution.
+4. Click Install/Update.
 
 > [!NOTE]
 > The solution installation typically takes 2-3 minutes. You'll see a notification when it completes.
