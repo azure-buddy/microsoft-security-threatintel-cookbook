@@ -36,7 +36,7 @@ TAXII 2.x uses a client-server model with these key components:
   - Default is `taxii2`. Use `GET` to display the available API Root endpoints.
   - With the API Root you can display the available collections using `GET` `taxii2/root/collections`.
 - Collection Objects: URL that provides access to the specific collection objects:
-  - Combining all examples the collection endpoint is `taxii2/root/collections/a08566d0-8ae0-4004-8dfb-655e891ca876`.
+  - Combining all examples the collection endpoint is `taxii2/root/collections/a08566d0-8ae0-4004-8dfb-655e891ca876/objects`.
  
 ## Microsoft Sentinel's STIX/TAXII Integration
 
