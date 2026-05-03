@@ -5,9 +5,9 @@
 This chapter walks you through connecting Microsoft Sentinel to a TAXII 2.x server to import threat indicators. We'll use a free threat intelligence feed (Pulsedive) as our example, giving you hands-on experience without requiring a commercial subscription.
 
 ## Prerequisites
-- Microsoft Sentinel Contributor role at resource group level
-- Threat Intelligence solution installed from Content Hub
-- TAXII server credentials (API root, collection ID, username/password)
+- Microsoft Sentinel Contributor role at resource group level.
+- Threat Intelligence solution installed from Content Hub.
+- TAXII server credentials (API root, collection ID, username/password).
 
 > [!NOTE]  
 > If you don't have TAXII credentials yet, you can use free feeds from Pulsedive (https://pulsedive.com) or other
@@ -16,16 +16,8 @@ This chapter walks you through connecting Microsoft Sentinel to a TAXII 2.x serv
 
 ## Step 1: Install the Threat Intelligence Solution
 
-The Threat Intelligence solution contains all necessary connectors and analytics rules.
+The Threat Intelligence solution is a Featured package and contains all necessary connectors and analytics rules. Follow the steps actions below to Install/Update the Solution package.
 
-### In Azure Portal:
-1. Navigate to your Microsoft Sentinel workspace.
-2. Select Content management > Content hub.
-3. Search for 'Threat Intelligence'.
-4. Select the Threat Intelligence (NEW) solution.
-5. Click Install/Update.
-
-### In Defender Portal:
 1. Navigate to Microsoft Sentinel > Content management > Content hub.
 2. Search for 'Threat Intelligence'.
 3. Select the Threat Intelligence (NEW) solution.
@@ -37,10 +29,10 @@ The Threat Intelligence solution contains all necessary connectors and analytics
 ## Step 2: Locate TAXII Server Information
 Before configuring the connector, gather the following information from your threat intelligence provider:
 
--  API Root URL: The base endpoint hosting collections
--  Collection ID: Unique identifier for the threat intelligence collection
--  Username: Authentication credential (if required)
--  Password: Authentication credential (if required)
+-  API Root URL: The base endpoint hosting collections.
+-  Collection ID: Unique identifier for the threat intelligence collection.
+-  Username: Authentication credential (if required).
+-  Password: Authentication credential (if required).
 
 ### Example looking up available API-root and Collections using Browser
 This example below shows how to lookup the available API Roots. Just copy/paste this into your favorite browser and don't forget to include your key.
@@ -66,32 +58,28 @@ curl -X GET https://taxii.provider.com/taxii2/ \   -H "Accept: application/taxii
 
 ## Step 3: Configure the TAXII Data Connector
 
-### In Azure Portal:
-1. Navigate to Microsoft Sentinel > Configuration > Data connectors
-2. Search for 'Threat Intelligence - TAXII'
-3. Select the connector and click 'Open connector page'
-4. Fill in the configuration form (see below)
-5. Click 'Add'
+Use the followign steps to configure a TAXII Server.
 
-### In Defender Portal:
-1. Navigate to Microsoft Sentinel > Content management > Content hub
-2. Select 'Data connectors' from the filters
-3. Find 'Threat Intelligence - TAXII'
-4. Click 'Open connector page'
-5. Fill in the configuration form and click 'Add'
+1. Navigate to Microsoft Sentinel > Configuration > Data connectors.
+2. Search for 'Threat Intelligence - TAXII'.
+3. Select the connector and click 'Open connector page'.
+4. Fill in the desired configuration (see below for all configuration options).
+5. Click 'Add'.
 
-### Configuration Form Fields
+### Configuration opions
 
 | **Field**             | **Description**                                                                  |
 | --------------------- | -------------------------------------------------------------------------------- |
-| **Friendly Name**     | Descriptive name for this connection (e.g., 'Pulsedive Threat Feed')             |
-| **API Root URL**      | Full TAXII API root endpoint (must include protocol: https://)                   |
-| **Collection ID**     | UUID or string identifying the threat intelligence collection                    |
-| **Username**          | Authentication username (leave blank if not required)                            |
-| **Password**          | Authentication password or in case of Pulsedrive you may provide the API key     |
-| **Import Indicators** | Select indicator types to import (All, IP, URL, Domain, Hash, Email)             |
-| **Polling Frequency** | How often to poll for new indicators (Once an hour, Once a day, Once per minute) |
+| **Friendly Name**     | Descriptive name for this connection (e.g., 'Pulsedive-Threat-Feed').            |
+| **API Root URL**      | Full TAXII API root endpoint (must include protocol: https://).                  |
+| **Collection ID**     | UUID or string identifying the threat intelligence collection.                   |
+| **Username**          | Authentication username (leave blank if not required).                           |
+| **Password**          | Authentication password or in case of Pulsedive you may provide the API key.    |
+| **Import Indicators** | Select indicator types to import (All available or one day/week/month old.) .    |
+| **Polling Frequency** | How often to poll for new indicators (Once an hour, Once a day, Once per minute).|
 
+> [!Note]
+> When you are going to add the Pulsedive Feed, just follow the [Quick Start](https://docs.pulsedive.com/taxii/quick-setup) page for all configuration specifics.
 
 > [!Important]
 > Choose polling frequency carefully. More frequent polling increases costs and may hit provider rate limits. For most feeds, 'Once an hour' is sufficient.
@@ -102,20 +90,47 @@ After clicking 'Add', you should see a confirmation message: 'Connection to TAXI
 
 ### Check Indicator Import Status
 
+This can be achieved in different ways. Either using the Threat Intelligence page or running a KQL query.
+
+Use the followign steps to check all imported Indicators objects.
+
+1. Navigate to Microsoft Sentinel > Threat management > Threat Intelligence.
+2. Click Open intel management to get forwarded to the Threat intelligence > Intel management.
+3. Click Filters, add condition to only show records that have a Source field containing 'Pulsedive' and Apply. 
+4. Select the connector and click 'Open connector page'.
+5. Check if you see around 300 registered Indicators and one (1) Identity are created.
+
 Run this KQL query in Log Analytics or Advanced Hunting:
 
+First check if any records are available.
+
 ```
-ThreatIntelligenceIndicator | where SourceSystem contains "Pulsedive"  // Replace with your source name | summarize Count=count() by bin(TimeGenerated, 1h) | order by TimeGenerated desc | take 24
+ThreatIntelIndicators
+| where SourceSystem contains "Pulsedive"
+```
+
+The KQL Query below shows the number of indicators imported per hour over the last 24 hours.
+
+```
+ThreatIntelIndicators
+| where SourceSystem contains "Pulsedive"
+| summarize Count=count() by bin(TimeGenerated, 1h) | order by TimeGenerated desc | take 24
 ```
 
 This shows the number of indicators imported per hour over the last 24 hours.
 
 ### View Imported Indicators
 
-To see the actual indicators:
+To see the ratio between the various Indicator Types.
 
 ```
-ThreatIntelligenceIndicator | where SourceSystem contains "Pulsedive" | extend IndicatorValue = coalesce(     NetworkIP,     DomainName,     Url,     FileHashValue ) | project      TimeGenerated,     IndicatorValue,     ThreatType,     Confidence,     Description | take 100
+ThreatIntelIndicators 
+| where SourceSystem contains "Pulsedive"
+| extend IndicatorType = strcat_array(Data.indicator_types,"; ")
+| extend Description = strcat(Data.description)
+| extend ObservableIOC = split(ObservableKey, ":")[0]
+| project TimeGenerated, IndicatorType,Description, ObservableValue, ObservableIOC, Confidence
+| summarize Count=count() by tostring(ObservableIOC)
 ```
 
 ## Step 5: Connect Additional Feeds
